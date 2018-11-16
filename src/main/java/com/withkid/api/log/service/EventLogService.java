@@ -16,7 +16,10 @@ import com.withkid.api.log.domain.EventLogDto;
 public class EventLogService {
 	@Resource(name = "redisTemplate")
 	private ZSetOperations<String, EventLogDto> zsetOperations;
-
+	
+	@Resource
+	private JwtService jwtService;
+	
 	public Integer findMaxScore(String key) {
 		Optional<TypedTuple<EventLogDto>> tupleOpt = zsetOperations.rangeWithScores(key, -1, -1).stream().findFirst();
 		Integer maxScore = 0;
@@ -30,7 +33,7 @@ public class EventLogService {
 	public Set<EventLogDto> findLast10Logs(String testKey) {
 		return zsetOperations.reverseRange(testKey, 0, 9);
 	}
-
+	
 	public void save(String key, EventLogDto event) {
 		zsetOperations.add(key, event, findMaxScore(key));
 	}

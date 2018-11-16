@@ -2,6 +2,7 @@ package com.withkid.api.log;
 
 import static org.junit.Assert.assertEquals;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -32,8 +33,8 @@ public class TestEventLogService {
 	private EventLogService eventLogService;
 
 	private Long userId = 1L;
-	private String userGroup = "userGroup" + userId / 1000 + ":";
-	private String testKey = "test" + userGroup + userId;
+	private String bucket = "eventLog::";
+	private String testKey = "test" + bucket + userId;
 	private final Integer END_NUM = 100;
 
 	@Before
@@ -51,7 +52,7 @@ public class TestEventLogService {
 
 	@Test
 	public void testSave() {
-		EventLogDto saveData = EventLogDto.builder().eventId(100L).name("한국사람").build();
+		EventLogDto saveData = EventLogDto.builder().eventId(100L).name("한국사람").startDate(LocalDate.now().toString()).build();
 		eventLogService.save(testKey, saveData);
 		Set<EventLogDto> re = zsetOperations.range(testKey, -1, -1);
 		assertEquals(saveData.getEventId(), re.iterator().next().getEventId());
