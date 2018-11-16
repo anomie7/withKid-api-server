@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 
 import com.withkid.api.log.domain.EventLogDto;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+
 
 @Service
 public class EventLogService {
@@ -30,8 +33,20 @@ public class EventLogService {
 		return maxScore;
 	}
 
-	public Set<EventLogDto> findLast10Logs(String testKey) {
-		return zsetOperations.reverseRange(testKey, 0, 9);
+	public Set<EventLogDto> findLast10Logs(String key) {
+		return zsetOperations.reverseRange(key, 0, 9);
+	}
+
+	public String getKey(String accessToken) {
+		Jws<Claims> body = jwtService.thisAccessTokenUsable(accessToken);
+		Integer userId = (Integer) body.getBody().get("id");
+		String key = "eventLog::" + userId;
+		return key;
+	}
+	
+	public void saveByAccessToken(String accessToken, EventLogDto eventLog) {
+		String key = getKey(accessToken);
+		save(key, eventLog);
 	}
 	
 	public void save(String key, EventLogDto event) {

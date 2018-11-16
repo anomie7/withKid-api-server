@@ -26,11 +26,4 @@ public class JwtService {
 		}
 		return re;
 	}
-
-	public String getKey(String accessToken) {
-		Jws<Claims> body = thisAccessTokenUsable(accessToken);
-		Integer userId = (Integer) body.getBody().get("id");
-		String key = "eventLog::" + userId;
-		return key;
-	}
 }
