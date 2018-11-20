@@ -1,6 +1,5 @@
 package com.withkid.api.web.controller;
 
-import java.beans.EventSetDescriptor;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.withkid.api.log.domain.EventLogDto;
 import com.withkid.api.log.service.EventLogService;
-import com.withkid.api.log.service.JwtService;
 
 @CrossOrigin(origins="*")
 @RestController
