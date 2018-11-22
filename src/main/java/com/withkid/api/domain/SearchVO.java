@@ -24,4 +24,8 @@ public class SearchVO {
     
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
 	private LocalDateTime endDate;
+
+	public String getKey() {
+		return this.getRegion() + "::" +this.getKindOf().toString() + "::" + this.getStartDate().toString() + "::" + this.getEndDate().toString();
+	}
 }
