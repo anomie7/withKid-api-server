@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class EventResponse extends PageResponse<InterParkData> {
-	private List<EventDto> events;
+	private List<?> events;
 	private int status;
 	private String msg;
 

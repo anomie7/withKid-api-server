@@ -1,6 +1,6 @@
 package com.withkid.api.web.response;
 
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,12 +17,12 @@ public class PageResponse<T> {
     private boolean isLastPage;
     private boolean isFirstPage;
     
-	public void addPageInfo(Page<T> entity) {
-		this.currentPageNum = entity.getNumber();
-		this.totalPageSize = entity.getTotalPages();
-		this.hasNextPage = entity.hasNext();
-		this.hasPriviousPage = entity.hasPrevious();
-		this.isLastPage = entity.isLast();
-		this.isFirstPage = entity.isFirst();
+	public void addPageInfo(PageImpl<?> page) {
+		this.currentPageNum = page.getNumber();
+		this.totalPageSize = page.getTotalPages();
+		this.hasNextPage = page.hasNext();
+		this.hasPriviousPage = page.hasPrevious();
+		this.isLastPage = page.isLast();
+		this.isFirstPage = page.isFirst();
 	}
 }
