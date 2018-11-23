@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
@@ -18,23 +19,25 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.withkid.api.domain.EventDto;
+import com.withkid.api.domain.EventCacheDto;
+import com.withkid.api.domain.InterParkData;
 import com.withkid.api.domain.InterparkType;
 import com.withkid.api.domain.SearchVO;
-import com.withkid.api.web.response.EventResponse;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Transactional
 public class TestEventCacheService {
 	@Autowired
-	private EventCacheService eventChacheService;
+	private EventCacheService eventCacheService;
 
 	@Resource(name = "redisTemplate")
-	private ListOperations<String, EventDto> listOperation;
+	private ListOperations<String, EventCacheDto> listOperation;
 
 	@Resource
-	private RedisTemplate<String, EventDto> redisTemplate;
+	private RedisTemplate<String, EventCacheDto> redisTemplate;
 	
 	@Resource
 	private InterparkService interparkService;
@@ -44,7 +47,7 @@ public class TestEventCacheService {
 
 	@Test
 	public void existTest() {
-		listOperation.leftPush(keyword.getKey(), EventDto.builder().build());
+		listOperation.leftPush(keyword.getKey(), EventCacheDto.builder().build());
 		boolean isExist = redisTemplate.hasKey(keyword.getKey());
 		assertEquals(true, isExist);
 		redisTemplate.delete(keyword.getKey());
@@ -58,7 +61,7 @@ public class TestEventCacheService {
 
 	@Test
 	public void setExpireKeyTest() throws InterruptedException {
-		listOperation.leftPush(keyword.getKey(), EventDto.builder().build());
+		listOperation.leftPush(keyword.getKey(), EventCacheDto.builder().build());
 		redisTemplate.expireAt(keyword.getKey(),Date.from(ZonedDateTime.now().plusSeconds(30).toInstant()));
 		Thread.sleep(35000);
 		Boolean isExist = redisTemplate.hasKey(keyword.getKey());
@@ -66,7 +69,7 @@ public class TestEventCacheService {
 	}
 
 	@Test
-	public void saveTest() {
+	public void saveTestWhenKeyNotExist() {
 		String city = "서울";
 		InterparkType dtype = InterparkType.Mu;
 		LocalDateTime start = LocalDateTime.now();
@@ -76,11 +79,39 @@ public class TestEventCacheService {
 				.build();
 
 		Pageable pageable = PageRequest.of(0, 10);
-		EventResponse response = interparkService.searchEvent(search, pageable); //EventResponse는 controller에서 반환하는 타입
+		List<InterParkData> res = interparkService.searchAllEvent(search); 
+		List<EventCacheDto> list = res.stream().map(EventCacheDto::fromEntity).collect(Collectors.toList());
+		listOperation.rightPushAll(search.getKey(), list);
 		
-		List<EventDto> lists = response.getEvents();
-		listOperation.rightPushAll(search.getKey(), lists);
-		List<EventDto> llist = listOperation.range(search.getKey(), 0, listOperation.size(search.getKey()));
+		List<EventCacheDto> tmp = list.subList(0, 10);
+		
+		List<EventCacheDto> llist = listOperation.range(search.getKey(), 0, listOperation.size(search.getKey()));
+		assertEquals(list.size(), llist.size());
+		assertEquals(tmp.size(), pageable.getPageSize());
+		
 		redisTemplate.delete(search.getKey());
+	}
+	
+	@Test
+	public void saveTestWhenKeyExist() {
+		//given
+		String city = "서울";
+		InterparkType dtype = InterparkType.Mu;
+		LocalDateTime start = LocalDateTime.now();
+		LocalDateTime end = start.plusDays(7);
+
+		SearchVO search = SearchVO.builder().region(city).kindOf(dtype).startDate(start).endDate(end)
+				.build();
+
+		Pageable pageable = PageRequest.of(1, 10); //pageable의 변화에 따라서 리턴되는 값이 달라져야함 
+		List<InterParkData> res = interparkService.searchAllEvent(search); 
+		List<EventCacheDto> list = res.stream().map(EventCacheDto::fromEntity).collect(Collectors.toList());
+		listOperation.rightPushAll(search.getKey(), list);
+		
+		//when
+		List<EventCacheDto> llist = eventCacheService.search(search, pageable);
+		
+		//then
+		assertEquals(llist.size(), pageable.getPageSize());
 	}
 }
