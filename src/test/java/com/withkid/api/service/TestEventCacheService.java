@@ -70,24 +70,20 @@ public class TestEventCacheService {
 
 	@Test
 	public void saveTestWhenKeyNotExist() {
+		//given
 		String city = "서울";
 		InterparkType dtype = InterparkType.Mu;
 		LocalDateTime start = LocalDateTime.now();
 		LocalDateTime end = start.plusDays(7);
-
 		SearchVO search = SearchVO.builder().region(city).kindOf(dtype).startDate(start).endDate(end)
 				.build();
-
 		Pageable pageable = PageRequest.of(0, 10);
-		List<InterParkData> res = interparkService.searchAllEvent(search); 
-		List<EventCacheDto> list = res.stream().map(EventCacheDto::fromEntity).collect(Collectors.toList());
-		listOperation.rightPushAll(search.getKey(), list);
 		
-		List<EventCacheDto> tmp = list.subList(0, 10);
+		//when
+		List<EventCacheDto> res = eventCacheService.cacheEvent(pageable, search);
 		
-		List<EventCacheDto> llist = listOperation.range(search.getKey(), 0, listOperation.size(search.getKey()));
-		assertEquals(list.size(), llist.size());
-		assertEquals(tmp.size(), pageable.getPageSize());
+		//then
+		assertEquals(res.size(), pageable.getPageSize());
 		
 		redisTemplate.delete(search.getKey());
 	}
@@ -103,7 +99,7 @@ public class TestEventCacheService {
 		SearchVO search = SearchVO.builder().region(city).kindOf(dtype).startDate(start).endDate(end)
 				.build();
 
-		Pageable pageable = PageRequest.of(1, 10); //pageable의 변화에 따라서 리턴되는 값이 달라져야함 
+		Pageable pageable = PageRequest.of(1, 10); 
 		List<InterParkData> res = interparkService.searchAllEvent(search); 
 		List<EventCacheDto> list = res.stream().map(EventCacheDto::fromEntity).collect(Collectors.toList());
 		listOperation.rightPushAll(search.getKey(), list);
@@ -113,5 +109,7 @@ public class TestEventCacheService {
 		
 		//then
 		assertEquals(llist.size(), pageable.getPageSize());
+		
+		redisTemplate.delete(search.getKey());
 	}
 }
