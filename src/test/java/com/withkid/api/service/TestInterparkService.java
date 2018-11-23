@@ -1,5 +1,6 @@
 package com.withkid.api.service;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -14,6 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
@@ -22,13 +24,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.withkid.api.WithKidRestApiApplication;
 import com.withkid.api.domain.Address;
-import com.withkid.api.domain.EventDto;
 import com.withkid.api.domain.InterParkData;
 import com.withkid.api.domain.InterparkType;
 import com.withkid.api.domain.Price;
 import com.withkid.api.domain.SearchVO;
 import com.withkid.api.repository.InterParkRepository;
-import com.withkid.api.web.response.EventResponse;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { WithKidRestApiApplication.class })
@@ -105,12 +105,11 @@ public class TestInterparkService {
 				.build();
 
 		Pageable pageable = PageRequest.of(0, 10);
-		EventResponse response = interparkService.searchEvent(search, pageable);
-		EventDto eventDto = response.getEvents().get(0);
-		assertThat(eventDto.getKindOf(), equalTo(dtype));
-		for (int i = 0; i < prices.size(); i++) {
-			assertThat(eventDto.getPrice().get(i).getId(), equalTo(prices.get(i).getId()));
-		}
+		Page<InterParkData> event = interparkService.searchEvent(search, pageable);
+		event.getContent().stream().forEach( obj -> {
+			assertThat(obj.getDtype(), equalTo(dtype));
+			assertThat(obj.getAddress().getCity(), containsString(city) );
+		});
 	}
 	
 	@Test
@@ -125,8 +124,8 @@ public class TestInterparkService {
 				.build();
 		
 		Pageable pageable = PageRequest.of(0, 10);
-		EventResponse response = interparkService.searchEvent(search, pageable);
-		assertEquals(4, response.getEvents().size());
+		Page<InterParkData> event = interparkService.searchEvent(search, pageable);
+		assertEquals(testLs.size(), event.getNumberOfElements() );
 	}
 
 }

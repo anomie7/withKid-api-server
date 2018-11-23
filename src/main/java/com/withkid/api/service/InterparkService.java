@@ -1,5 +1,8 @@
 package com.withkid.api.service;
 
+import java.util.List;
+
+import org.assertj.core.util.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,7 +13,6 @@ import com.withkid.api.domain.InterParkData;
 import com.withkid.api.domain.SearchVO;
 import com.withkid.api.repository.InterParkRepository;
 import com.withkid.api.repository.InterparkPredicateProvider;
-import com.withkid.api.web.response.EventResponse;
 
 @Service
 public class InterparkService {
@@ -19,12 +21,15 @@ public class InterparkService {
 	private InterParkRepository interparkRepository;
 	
 	@Transactional(readOnly=true)
-	public EventResponse searchEvent(SearchVO search, Pageable pageable) {
+	public Page<InterParkData> searchEvent(SearchVO search, Pageable pageable) {
 		Page<InterParkData> event = interparkRepository.findAll(InterparkPredicateProvider.getSearchPredicate(search)
 																,pageable);
-		EventResponse res = EventResponse.fromEntity(event.getContent());
-		res.addPageInfo(event);
-		return res;
+		return event;
+	}
+
+	public List<InterParkData> searchAllEvent(SearchVO search) {
+		Iterable<InterParkData> event = interparkRepository.findAll(InterparkPredicateProvider.getSearchPredicate(search));
+		return Lists.newArrayList(event);
 	}
 
 }

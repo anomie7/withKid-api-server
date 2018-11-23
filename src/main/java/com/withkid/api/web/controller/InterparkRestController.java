@@ -1,12 +1,14 @@
 package com.withkid.api.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.withkid.api.domain.InterParkData;
 import com.withkid.api.domain.SearchVO;
 import com.withkid.api.service.InterparkService;
 import com.withkid.api.web.response.EventResponse;
@@ -26,7 +28,9 @@ public class InterparkRestController {
 		@ApiImplicitParam(name = "size", dataType = "integer", paramType = "query", value = "Number of records per page.") })
 	@GetMapping("/event")
 	public ResponseEntity<EventResponse> getEvent(SearchVO search, @ApiIgnore Pageable pageable){
-		EventResponse searchEvent = interpakrService.searchEvent(search, pageable);
-		return ResponseEntity.ok().body(searchEvent);
+		Page<InterParkData> searchEvent = interpakrService.searchEvent(search, pageable);
+		EventResponse res = EventResponse.fromEntity(searchEvent.getContent());
+		res.addPageInfo(searchEvent);
+		return ResponseEntity.ok().body(res);
 	}
 }
