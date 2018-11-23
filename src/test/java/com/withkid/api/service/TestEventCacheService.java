@@ -48,7 +48,7 @@ public class TestEventCacheService {
 	@Test
 	public void existTest() {
 		listOperation.leftPush(keyword.getKey(), EventCacheDto.builder().build());
-		boolean isExist = redisTemplate.hasKey(keyword.getKey());
+		boolean isExist = eventCacheService.isExist(keyword.getKey());
 		assertEquals(true, isExist);
 		redisTemplate.delete(keyword.getKey());
 	}

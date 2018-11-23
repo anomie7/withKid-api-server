@@ -48,4 +48,8 @@ public class EventCacheService {
 		List<EventCacheDto> res = cacheList.subList(getFirstIndex(pageable), getLastIndex(pageable) + 1);
 		return res;
 	}
+
+	public boolean isExist(String key) {
+		return redisTemplate.hasKey(key);
+	}
 }
