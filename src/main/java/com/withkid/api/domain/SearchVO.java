@@ -26,6 +26,6 @@ public class SearchVO {
 	private LocalDateTime endDate;
 
 	public String getKey() {
-		return this.getRegion() + "::" +this.getKindOf().toString() + "::" + this.getStartDate().toString() + "::" + this.getEndDate().toString();
+		return this.getRegion() + "::" +this.getKindOf().toString() + "::" + this.getStartDate().toLocalDate().toString() + "::" + this.getEndDate().toLocalDate().toString();
 	}
 }
