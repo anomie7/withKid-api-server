@@ -26,6 +26,8 @@ import com.withkid.api.domain.InterParkData;
 import com.withkid.api.domain.InterparkType;
 import com.withkid.api.domain.SearchVO;
 
+import net.minidev.json.writer.CollectionMapper.ListType;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Transactional
@@ -56,7 +58,7 @@ public class TestEventCacheService {
 	@Test
 	public void getKeyTest() {
 		assertEquals(keyword.getRegion() + "::" + keyword.getKindOf().toString() + "::"
-				+ keyword.getStartDate().toString() + "::" + keyword.getEndDate().toString(), keyword.getKey());
+				+ keyword.getStartDate().toLocalDate().toString() + "::" + keyword.getEndDate().toLocalDate().toString(), keyword.getKey());
 	}
 
 	@Test
@@ -110,6 +112,30 @@ public class TestEventCacheService {
 		//then
 		assertEquals(llist.size(), pageable.getPageSize());
 		
+		redisTemplate.delete(search.getKey());
+	}
+	
+	@Test
+	public void getTotalTest() {
+		//given
+		String city = "서울";
+		InterparkType dtype = InterparkType.Mu;
+		LocalDateTime start = LocalDateTime.now();
+		LocalDateTime end = start.plusDays(7);
+
+		SearchVO search = SearchVO.builder().region(city).kindOf(dtype).startDate(start).endDate(end)
+				.build();
+
+		Pageable pageable = PageRequest.of(1, 10); 
+		List<InterParkData> res = interparkService.searchAllEvent(search); 
+		List<EventCacheDto> list = res.stream().map(EventCacheDto::fromEntity).collect(Collectors.toList());
+		listOperation.rightPushAll(search.getKey(), list);
+		
+		//when
+		Long size = eventCacheService.getTotal(search.getKey());
+		
+		//then
+		assertEquals(Long.valueOf(list.size()), size);
 		redisTemplate.delete(search.getKey());
 	}
 }

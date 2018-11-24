@@ -24,7 +24,7 @@ public class EventCacheService {
 	private RedisTemplate<String, EventCacheDto> redisTemplate;
 	@Resource
 	private InterparkService interparkService;
-
+	
 	public List<EventCacheDto> search(SearchVO search, Pageable pageable) {
 		Integer firstIdx = pageable.getPageNumber() * pageable.getPageSize();
 		Integer lastIdx = getLastIndex(pageable);
@@ -51,5 +51,9 @@ public class EventCacheService {
 
 	public boolean isExist(String key) {
 		return redisTemplate.hasKey(key);
+	}
+
+	public Long getTotal(String key) {
+		return listOperation.size(key);
 	}
 }
