@@ -18,14 +18,44 @@ import lombok.Setter;
 public class SearchVO {
 	private String region;
 	private InterparkType kindOf;
-	
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+
+	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
 	private LocalDateTime startDate;
-    
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+
+	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
 	private LocalDateTime endDate;
 
 	public String getKey() {
-		return this.getRegion() + "::" +this.getKindOf().toString() + "::" + this.getStartDate().toLocalDate().toString() + "::" + this.getEndDate().toLocalDate().toString();
+		return this.getRegionKey() + "::" + this.getKindOfKey().toString() + "::"
+				+ this.getStartDateKey() + "::" + this.getEndDateKey();
 	}
+
+	public String getRegionKey() {
+		if(region == null) {
+			return "전체";
+		}
+		return region;
+	}
+
+	public String getKindOfKey() {
+		if(kindOf == null) {
+			return "전체";
+		}
+		return kindOf.toString();
+	}
+
+	public String getStartDateKey() {
+		if(startDate == null) {
+			return "전체기간";
+		}
+		return startDate.toLocalDate().toString();
+	}
+
+	public String getEndDateKey() {
+		if(endDate == null) {
+			return "전체기간";
+		}
+		return endDate.toLocalDate().toString();
+	}
+	
 }

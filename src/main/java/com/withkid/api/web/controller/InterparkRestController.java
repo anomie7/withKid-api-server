@@ -40,7 +40,7 @@ public class InterparkRestController {
 			searchEvent = cacheService.cacheEvent(pageable, search);
 		}
 		EventResponse res = EventResponse.builder().events(searchEvent).build();
-		Page<EventCacheDto> page = new PageImpl<>(searchEvent, pageable, cacheService.getTotal(key));
+		Page<EventCacheDto> page = new PageImpl<>(searchEvent, pageable, cacheService.getTotal(key) );
 		res.addPageInfo(page);
 		return ResponseEntity.ok().body(res);
 	}

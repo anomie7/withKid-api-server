@@ -24,20 +24,12 @@ public class EventCacheService {
 	private RedisTemplate<String, EventCacheDto> redisTemplate;
 	@Resource
 	private InterparkService interparkService;
-	
+
 	public List<EventCacheDto> search(SearchVO search, Pageable pageable) {
 		Integer firstIdx = pageable.getPageNumber() * pageable.getPageSize();
 		Integer lastIdx = getLastIndex(pageable);
 		List<EventCacheDto> list = listOperation.range(search.getKey(), firstIdx, lastIdx);
 		return list;
-	}
-
-	public Integer getFirstIndex(Pageable pageable) {
-		return pageable.getPageNumber() * pageable.getPageSize();
-	}
-
-	public Integer getLastIndex(Pageable pageable) {
-		return getFirstIndex(pageable) + pageable.getPageSize() - 1;
 	}
 
 	public List<EventCacheDto> cacheEvent(Pageable pageable, SearchVO search) {
@@ -47,6 +39,14 @@ public class EventCacheService {
 		redisTemplate.expireAt(search.getKey(), Date.from(ZonedDateTime.now().plusWeeks(1).toInstant()));
 		List<EventCacheDto> res = cacheList.subList(getFirstIndex(pageable), getLastIndex(pageable) + 1);
 		return res;
+	}
+
+	public Integer getFirstIndex(Pageable pageable) {
+		return pageable.getPageNumber() * pageable.getPageSize();
+	}
+
+	public Integer getLastIndex(Pageable pageable) {
+		return getFirstIndex(pageable) + pageable.getPageSize() - 1;
 	}
 
 	public boolean isExist(String key) {
