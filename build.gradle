@@ -71,4 +71,7 @@ dependencies {
 	compile('com.querydsl:querydsl-core')
 	compile('com.querydsl:querydsl-apt') 
 	compile('com.querydsl:querydsl-jpa')
+	
+	//embedded-redis
+    compile group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2'
 }

@@ -74,7 +74,7 @@ spring:
      ansi: 
       enabled: always
   redis:
-    host: 192.168.99.100
+    host: localhost
     port: 6379
 #  datasource:
 #    sql-script-encoding: UTF-8     
