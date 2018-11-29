@@ -98,10 +98,10 @@ public class TestQuerydsl {
 		query.from(data).where(data.deleteflag.eq(DeleteFlag.N)).orderBy(data.startDate.asc());
 		List<InterParkData> ls = query.fetch();
 
-		assertEquals(prices4, ls.get(0).getPrice());
-		assertEquals(prices, ls.get(1).getPrice());
-		assertEquals(prices3, ls.get(2).getPrice());
-		assertEquals(prices2, ls.get(3).getPrice());
+		assertEquals(prices4.size(), ls.get(0).getPrice().size());
+		assertEquals(prices.size(), ls.get(1).getPrice().size());
+		assertEquals(prices3.size(), ls.get(2).getPrice().size());
+		assertEquals(prices2.size(), ls.get(3).getPrice().size());
 	}
 
 	@Test

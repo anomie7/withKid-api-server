@@ -2,8 +2,12 @@ package com.withkid.api.service;
 
 import static org.junit.Assert.assertEquals;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,15 +22,19 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.withkid.api.domain.Address;
 import com.withkid.api.domain.EventCacheDto;
 import com.withkid.api.domain.InterParkData;
 import com.withkid.api.domain.InterparkType;
 import com.withkid.api.domain.SearchVO;
+import com.withkid.api.repository.InterParkRepository;
 
 @RunWith(SpringRunner.class)
+@ActiveProfiles("test")
 @SpringBootTest
 @Transactional
 public class TestEventCacheService {
@@ -41,7 +49,10 @@ public class TestEventCacheService {
 	
 	@Resource
 	private InterparkService interparkService;
-
+	
+	@Resource
+	private InterParkRepository interparkRepository;
+	
 	SearchVO keyword = SearchVO.builder().region("서울").startDate(LocalDateTime.now())
 			.endDate(LocalDateTime.now().plusDays(1)).kindOf(InterparkType.Mu).build();
 
@@ -71,9 +82,25 @@ public class TestEventCacheService {
 	@Test
 	public void saveTestWhenKeyNotExist() {
 		//given
+		InterParkData obj1 = InterParkData.builder().name("뽀로로1").address(Address.builder().city("서울특별시").build())
+				.dtype(InterparkType.Mu).startDate(LocalDateTime.now().plusDays(1))
+				.endDate(LocalDateTime.now().plus(Period.ofDays(1))).build();
+		InterParkData obj2 = InterParkData.builder().name("뽀로로2").address(Address.builder().city("서울시").build())
+				.dtype(InterparkType.Cl).startDate(LocalDateTime.now().plusDays(1))
+				.endDate(LocalDateTime.now().plus(Period.ofDays(2))).build();
+		InterParkData obj3 = InterParkData.builder().name("뽀로로3").address(Address.builder().city("서울").build())
+				.dtype(InterparkType.Pl).startDate(LocalDateTime.now().plusDays(1)).endDate(LocalDateTime.now().minusDays(2))
+				.build();
+		List<InterParkData> testLs = new ArrayList<>();
+		testLs.add(obj1);
+		testLs.add(obj3);
+		testLs.add(obj2);
+		
+		interparkRepository.saveAll(testLs);
+		
 		String city = "서울";
 		InterparkType dtype = InterparkType.Mu;
-		LocalDateTime start = LocalDateTime.now();
+		LocalDateTime start = LocalDate.now().atStartOfDay();
 		LocalDateTime end = start.plusDays(7);
 		SearchVO search = SearchVO.builder().region(city).kindOf(dtype).startDate(start).endDate(end)
 				.build();
@@ -83,7 +110,14 @@ public class TestEventCacheService {
 		List<EventCacheDto> res = eventCacheService.cacheEvent(pageable, search);
 		
 		//then
-		assertEquals(res.size(), pageable.getPageSize());
+		res.forEach(obj -> {
+			DateTimeFormatter ofPattern = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			LocalDateTime $start = LocalDate.parse(obj.getStartDate(), ofPattern).atStartOfDay();
+			LocalDateTime $end = LocalDate.parse(obj.getEndDate(), ofPattern).atStartOfDay();
+			assertEquals(obj.getKindOf(), search.getKindOf());
+			assertEquals(true, $start.isAfter(start));
+			assertEquals(true, $end.isBefore(end));
+		});
 		
 		redisTemplate.delete(search.getKey());
 	}
@@ -91,15 +125,31 @@ public class TestEventCacheService {
 	@Test
 	public void saveTestWhenKeyExist() {
 		//given
+		InterParkData obj1 = InterParkData.builder().name("뽀로로1").address(Address.builder().city("서울특별시").build())
+				.dtype(InterparkType.Mu).startDate(LocalDateTime.now())
+				.endDate(LocalDateTime.now().plus(Period.ofDays(1))).build();
+		InterParkData obj2 = InterParkData.builder().name("뽀로로2").address(Address.builder().city("서울시").build())
+				.dtype(InterparkType.Cl).startDate(LocalDateTime.now())
+				.endDate(LocalDateTime.now().plus(Period.ofDays(2))).build();
+		InterParkData obj3 = InterParkData.builder().name("뽀로로3").address(Address.builder().city("서울").build())
+				.dtype(InterparkType.Pl).startDate(LocalDateTime.now()).endDate(LocalDateTime.now().minusDays(2))
+				.build();
+		List<InterParkData> testLs = new ArrayList<>();
+		testLs.add(obj1);
+		testLs.add(obj3);
+		testLs.add(obj2);
+		
+		interparkRepository.saveAll(testLs);
+		
 		String city = "서울";
-		InterparkType dtype = InterparkType.Mu;
+		InterparkType dtype = null;
 		LocalDateTime start = LocalDateTime.now();
-		LocalDateTime end = start.plusDays(7);
+		LocalDateTime end = null;
 
 		SearchVO search = SearchVO.builder().region(city).kindOf(dtype).startDate(start).endDate(end)
 				.build();
 
-		Pageable pageable = PageRequest.of(1, 10); 
+		Pageable pageable = PageRequest.of(0, 10); 
 		List<InterParkData> res = interparkService.searchAllEvent(search); 
 		List<EventCacheDto> list = res.stream().map(EventCacheDto::fromEntity).collect(Collectors.toList());
 		listOperation.rightPushAll(search.getKey(), list);
@@ -108,14 +158,30 @@ public class TestEventCacheService {
 		List<EventCacheDto> llist = eventCacheService.search(search, pageable);
 		
 		//then
-		assertEquals(llist.size(), pageable.getPageSize());
-		
+		assertEquals(llist.size(), list.size());
+		System.out.println(llist.size());
 		redisTemplate.delete(search.getKey());
 	}
 	
 	@Test
 	public void getTotalTest() {
 		//given
+		InterParkData obj1 = InterParkData.builder().name("뽀로로1").address(Address.builder().city("서울특별시").build())
+				.dtype(InterparkType.Mu).startDate(LocalDateTime.now())
+				.endDate(LocalDateTime.now().plus(Period.ofDays(1))).build();
+		InterParkData obj2 = InterParkData.builder().name("뽀로로2").address(Address.builder().city("서울시").build())
+				.dtype(InterparkType.Cl).startDate(LocalDateTime.now())
+				.endDate(LocalDateTime.now().plus(Period.ofDays(2))).build();
+		InterParkData obj3 = InterParkData.builder().name("뽀로로3").address(Address.builder().city("서울").build())
+				.dtype(InterparkType.Pl).startDate(LocalDateTime.now()).endDate(LocalDateTime.now().minusDays(2))
+				.build();
+		List<InterParkData> testLs = new ArrayList<>();
+		testLs.add(obj1);
+		testLs.add(obj3);
+		testLs.add(obj2);
+		
+		interparkRepository.saveAll(testLs);
+		
 		String city = "서울";
 		InterparkType dtype = InterparkType.Mu;
 		LocalDateTime start = LocalDateTime.now();
