@@ -75,7 +75,7 @@ spring:
       enabled: always
   redis:
     host: localhost
-    port: 6379
+    port: 9000
 #  datasource:
 #    sql-script-encoding: UTF-8     
 #    driver-class-name: org.h2.Driver
