@@ -37,8 +37,10 @@ public class EventCacheService {
 		List<EventCacheDto> cacheList = list.stream().map(EventCacheDto::fromEntity).collect(Collectors.toList());
 		listOperation.rightPushAll(search.getKey(), cacheList);
 		redisTemplate.expireAt(search.getKey(), Date.from(ZonedDateTime.now().plusWeeks(1).toInstant()));
-		List<EventCacheDto> res = cacheList.subList(getFirstIndex(pageable), getLastIndex(pageable) + 1);
-		return res;
+		if(cacheList.size() > pageable.getPageSize()) {
+			return cacheList.subList(getFirstIndex(pageable), getLastIndex(pageable) + 1);
+		}
+		return cacheList;
 	}
 
 	public Integer getFirstIndex(Pageable pageable) {
