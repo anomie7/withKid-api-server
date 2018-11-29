@@ -30,7 +30,7 @@ import com.withkid.api.domain.DeleteFlag;
 import com.withkid.api.domain.InterParkData;
 import com.withkid.api.domain.InterparkType;
 import com.withkid.api.domain.Price;
-import com.withkid.api.domain.SearchVO;
+import com.withkid.api.dto.SearchVO;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

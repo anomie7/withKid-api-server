@@ -3,8 +3,8 @@ package com.withkid.api.web.response;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.withkid.api.domain.EventDto;
 import com.withkid.api.domain.InterParkData;
+import com.withkid.api.dto.EventDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

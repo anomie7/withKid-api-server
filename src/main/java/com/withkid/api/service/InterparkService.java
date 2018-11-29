@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
 import com.withkid.api.domain.InterParkData;
-import com.withkid.api.domain.SearchVO;
+import com.withkid.api.dto.SearchVO;
 import com.withkid.api.repository.InterParkRepository;
 import com.withkid.api.repository.InterparkPredicateProvider;
 

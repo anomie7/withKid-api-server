@@ -12,9 +12,9 @@ import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import com.withkid.api.domain.EventCacheDto;
 import com.withkid.api.domain.InterParkData;
-import com.withkid.api.domain.SearchVO;
+import com.withkid.api.dto.EventCacheDto;
+import com.withkid.api.dto.SearchVO;
 
 @Service
 public class EventCacheService {

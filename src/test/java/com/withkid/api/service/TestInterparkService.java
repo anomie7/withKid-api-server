@@ -26,7 +26,7 @@ import com.withkid.api.domain.Address;
 import com.withkid.api.domain.InterParkData;
 import com.withkid.api.domain.InterparkType;
 import com.withkid.api.domain.Price;
-import com.withkid.api.domain.SearchVO;
+import com.withkid.api.dto.SearchVO;
 import com.withkid.api.repository.InterParkRepository;
 
 @RunWith(SpringRunner.class)

@@ -8,7 +8,7 @@ import com.querydsl.core.types.Predicate;
 import com.withkid.api.domain.DeleteFlag;
 import com.withkid.api.domain.InterparkType;
 import com.withkid.api.domain.QInterParkData;
-import com.withkid.api.domain.SearchVO;
+import com.withkid.api.dto.SearchVO;
 
 public class InterparkPredicateProvider {
 	public static Predicate getSearchPredicate(SearchVO search) {

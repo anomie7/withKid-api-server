@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.withkid.api.domain.EventCacheDto;
-import com.withkid.api.domain.SearchVO;
+import com.withkid.api.dto.EventCacheDto;
+import com.withkid.api.dto.SearchVO;
 import com.withkid.api.service.EventCacheService;
 import com.withkid.api.web.response.EventResponse;
 
