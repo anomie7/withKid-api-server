@@ -22,7 +22,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.withkid.api.WithKidRestApiApplication;
 import com.withkid.api.domain.Address;
 import com.withkid.api.domain.InterParkData;
 import com.withkid.api.domain.InterparkType;
@@ -31,7 +30,7 @@ import com.withkid.api.domain.SearchVO;
 import com.withkid.api.repository.InterParkRepository;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = { WithKidRestApiApplication.class })
+@SpringBootTest()
 @ActiveProfiles("test")
 public class TestInterparkService {
 	@Autowired
