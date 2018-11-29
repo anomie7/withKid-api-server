@@ -1,4 +1,6 @@
-package com.withkid.api.domain;
+package com.withkid.api.dto;
+
+import com.withkid.api.domain.Price;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

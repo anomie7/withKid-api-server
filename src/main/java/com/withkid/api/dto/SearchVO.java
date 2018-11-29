@@ -1,8 +1,10 @@
-package com.withkid.api.domain;
+package com.withkid.api.dto;
 
 import java.time.LocalDateTime;
 
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.withkid.api.domain.InterparkType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
