@@ -127,4 +127,18 @@ public class TestInterparkService {
 		assertEquals(testLs.size(), event.getNumberOfElements() );
 	}
 
+	@Test
+	@Transactional
+	public void testSearchAllEventWhenResultEqNull() {
+		String city = "대전";
+		InterparkType dtype = InterparkType.Pl;
+		LocalDateTime start = null;
+		LocalDateTime end = null;
+
+		SearchVO search = SearchVO.builder().region(city).kindOf(dtype).startDate(start).endDate(end).build();
+
+		List<InterParkData> event = interparkService.searchAllEvent(search);
+		assertEquals(0, event.size());
+	}
+
 }
