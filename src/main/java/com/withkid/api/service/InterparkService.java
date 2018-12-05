@@ -26,7 +26,8 @@ public class InterparkService {
 																,pageable);
 		return event;
 	}
-
+	
+	@Transactional(readOnly=true)
 	public List<InterParkData> searchAllEvent(SearchVO search) {
 		Iterable<InterParkData> event = interparkRepository.findAll(InterparkPredicateProvider.getSearchPredicate(search));
 		return Lists.newArrayList(event);

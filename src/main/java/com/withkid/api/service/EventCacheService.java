@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.withkid.api.domain.InterParkData;
 import com.withkid.api.dto.EventCacheDto;
 import com.withkid.api.dto.SearchVO;
+import com.withkid.api.exception.EventNotFountException;
 
 @Service
 public class EventCacheService {
@@ -34,6 +35,11 @@ public class EventCacheService {
 
 	public List<EventCacheDto> cacheEvent(Pageable pageable, SearchVO search) {
 		List<InterParkData> list = interparkService.searchAllEvent(search);
+		
+		if(list.isEmpty()) {
+			throw new EventNotFountException();
+		}
+		
 		List<EventCacheDto> cacheList = list.stream().map(EventCacheDto::fromEntity).collect(Collectors.toList());
 		listOperation.rightPushAll(search.getKey(), cacheList);
 		redisTemplate.expireAt(search.getKey(), Date.from(ZonedDateTime.now().plusWeeks(1).toInstant()));
