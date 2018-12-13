@@ -12,7 +12,7 @@ import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import com.withkid.api.domain.InterParkData;
+import com.withkid.api.domain.InterParkContent;
 import com.withkid.api.dto.EventCacheDto;
 import com.withkid.api.dto.SearchVO;
 import com.withkid.api.exception.EventNotFountException;
@@ -34,7 +34,7 @@ public class EventCacheService {
 	}
 
 	public List<EventCacheDto> cacheEvent(Pageable pageable, SearchVO search) {
-		List<InterParkData> list = interparkService.searchAllEvent(search);
+		List<InterParkContent> list = interparkService.searchAllEvent(search);
 		
 		if(list.isEmpty()) {
 			throw new EventNotFountException();

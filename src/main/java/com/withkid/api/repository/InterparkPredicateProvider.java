@@ -7,7 +7,7 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 import com.withkid.api.domain.DeleteFlag;
 import com.withkid.api.domain.InterparkType;
-import com.withkid.api.domain.QInterParkData;
+import com.withkid.api.domain.QInterParkContent;
 import com.withkid.api.dto.SearchVO;
 
 public class InterparkPredicateProvider {
@@ -18,7 +18,7 @@ public class InterparkPredicateProvider {
 		Optional<LocalDateTime> endOpt = Optional.ofNullable(search.getEndDate());
 		
 		BooleanBuilder build = new BooleanBuilder();
-		QInterParkData data = QInterParkData.interParkData;
+		QInterParkContent data = QInterParkContent.interParkContent;
 		cityOpt.ifPresent(city -> build.and(data.address.city.contains(city)));
 		dtypeOpt.ifPresent(kind -> build.and(data.dtype.eq(kind)));
 

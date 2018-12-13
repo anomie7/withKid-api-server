@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.withkid.api.domain.InterParkData;
+import com.withkid.api.domain.InterParkContent;
 import com.withkid.api.domain.InterparkType;
 
 import lombok.Builder;
@@ -26,7 +26,7 @@ public class EventDto extends AbstractEventDto {
 		this.endDate = endDate;
 	}
 
-	public static EventDto fromEntity(InterParkData entity) {
+	public static EventDto fromEntity(InterParkContent entity) {
 		EventDto dto = EventDto.builder().eventId(entity.getId()).name(entity.getName()).location(entity.getLocation())
 				.startDate(entity.getStartDate().toLocalDate()).endDate(entity.getEndDate().toLocalDate())
 				.kindOf(entity.getDtype()).imageFilePath(entity.getImageFilePath()).build();

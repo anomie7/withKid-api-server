@@ -29,7 +29,7 @@ public class Price {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "INTERPARK_ID")
-	private InterParkData interpark;
+	private InterParkContent interpark;
 
 	public Price(Long id, String name, int price) {
 		this.id = id;

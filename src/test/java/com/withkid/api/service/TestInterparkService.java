@@ -23,7 +23,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.withkid.api.domain.Address;
-import com.withkid.api.domain.InterParkData;
+import com.withkid.api.domain.InterParkContent;
 import com.withkid.api.domain.InterparkType;
 import com.withkid.api.domain.Price;
 import com.withkid.api.dto.SearchVO;
@@ -39,7 +39,7 @@ public class TestInterparkService {
 	@Autowired
 	private InterParkRepository interparkRepository;
 
-	private List<InterParkData> testLs = new ArrayList<>();
+	private List<InterParkContent> testLs = new ArrayList<>();
 	private List<Price> prices = new ArrayList<>();
 	private List<Price> prices2 = new ArrayList<>();
 	private List<Price> prices3 = new ArrayList<>();
@@ -67,16 +67,16 @@ public class TestInterparkService {
 		prices4.add(new Price(null, "상상가2", 60000));
 		prices4.add(new Price(null, "부모동반2", 12000));
 
-		InterParkData obj1 = InterParkData.builder().name("뽀로로1").address(Address.builder().city("서울특별시").build())
+		InterParkContent obj1 = InterParkContent.builder().name("뽀로로1").address(Address.builder().city("서울특별시").build())
 				.dtype(InterparkType.Mu).startDate(LocalDateTime.now())
 				.endDate(LocalDateTime.now().plus(Period.ofDays(1))).build();
-		InterParkData obj2 = InterParkData.builder().name("뽀로로2").address(Address.builder().city("서울시").build())
+		InterParkContent obj2 = InterParkContent.builder().name("뽀로로2").address(Address.builder().city("서울시").build())
 				.dtype(InterparkType.Cl).startDate(LocalDateTime.now())
 				.endDate(LocalDateTime.now().plus(Period.ofDays(2))).build();
-		InterParkData obj3 = InterParkData.builder().name("뽀로로3").address(Address.builder().city("서울").build())
+		InterParkContent obj3 = InterParkContent.builder().name("뽀로로3").address(Address.builder().city("서울").build())
 				.dtype(InterparkType.Pl).startDate(LocalDateTime.now()).endDate(LocalDateTime.now().minusDays(2))
 				.build();
-		InterParkData obj4 = InterParkData.builder().name("뽀로로4").address(Address.builder().city("대구광역시").build())
+		InterParkContent obj4 = InterParkContent.builder().name("뽀로로4").address(Address.builder().city("대구광역시").build())
 				.dtype(InterparkType.Ex).startDate(LocalDateTime.now().minusMonths(2))
 				.endDate(LocalDateTime.now().minusDays(1)).build();
 
@@ -104,7 +104,7 @@ public class TestInterparkService {
 				.build();
 
 		Pageable pageable = PageRequest.of(0, 10);
-		Page<InterParkData> event = interparkService.searchEvent(search, pageable);
+		Page<InterParkContent> event = interparkService.searchEvent(search, pageable);
 		event.getContent().stream().forEach( obj -> {
 			assertThat(obj.getDtype(), equalTo(dtype));
 			assertThat(obj.getAddress().getCity(), containsString(city) );
@@ -123,7 +123,7 @@ public class TestInterparkService {
 				.build();
 		
 		Pageable pageable = PageRequest.of(0, 10);
-		Page<InterParkData> event = interparkService.searchEvent(search, pageable);
+		Page<InterParkContent> event = interparkService.searchEvent(search, pageable);
 		assertEquals(testLs.size(), event.getNumberOfElements() );
 	}
 
@@ -137,7 +137,7 @@ public class TestInterparkService {
 
 		SearchVO search = SearchVO.builder().region(city).kindOf(dtype).startDate(start).endDate(end).build();
 
-		List<InterParkData> event = interparkService.searchAllEvent(search);
+		List<InterParkContent> event = interparkService.searchAllEvent(search);
 		assertEquals(0, event.size());
 	}
 

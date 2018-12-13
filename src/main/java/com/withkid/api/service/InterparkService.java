@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
-import com.withkid.api.domain.InterParkData;
+import com.withkid.api.domain.InterParkContent;
 import com.withkid.api.dto.SearchVO;
 import com.withkid.api.repository.InterParkRepository;
 import com.withkid.api.repository.InterparkPredicateProvider;
@@ -21,15 +21,15 @@ public class InterparkService {
 	private InterParkRepository interparkRepository;
 	
 	@Transactional(readOnly=true)
-	public Page<InterParkData> searchEvent(SearchVO search, Pageable pageable) {
-		Page<InterParkData> event = interparkRepository.findAll(InterparkPredicateProvider.getSearchPredicate(search)
+	public Page<InterParkContent> searchEvent(SearchVO search, Pageable pageable) {
+		Page<InterParkContent> event = interparkRepository.findAll(InterparkPredicateProvider.getSearchPredicate(search)
 																,pageable);
 		return event;
 	}
 	
 	@Transactional(readOnly=true)
-	public List<InterParkData> searchAllEvent(SearchVO search) {
-		Iterable<InterParkData> event = interparkRepository.findAll(InterparkPredicateProvider.getSearchPredicate(search));
+	public List<InterParkContent> searchAllEvent(SearchVO search) {
+		Iterable<InterParkContent> event = interparkRepository.findAll(InterparkPredicateProvider.getSearchPredicate(search));
 		return Lists.newArrayList(event);
 	}
 

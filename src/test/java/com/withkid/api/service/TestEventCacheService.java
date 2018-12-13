@@ -27,7 +27,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.withkid.api.domain.Address;
-import com.withkid.api.domain.InterParkData;
+import com.withkid.api.domain.InterParkContent;
 import com.withkid.api.domain.InterparkType;
 import com.withkid.api.dto.EventCacheDto;
 import com.withkid.api.dto.SearchVO;
@@ -84,16 +84,16 @@ public class TestEventCacheService {
 	@Test
 	public void saveTestWhenKeyNotExist() {
 		// given
-		InterParkData obj1 = InterParkData.builder().name("뽀로로1").address(Address.builder().city("서울특별시").build())
+		InterParkContent obj1 = InterParkContent.builder().name("뽀로로1").address(Address.builder().city("서울특별시").build())
 				.dtype(InterparkType.Mu).startDate(LocalDateTime.now().plusDays(1))
 				.endDate(LocalDateTime.now().plus(Period.ofDays(1))).build();
-		InterParkData obj2 = InterParkData.builder().name("뽀로로2").address(Address.builder().city("서울시").build())
+		InterParkContent obj2 = InterParkContent.builder().name("뽀로로2").address(Address.builder().city("서울시").build())
 				.dtype(InterparkType.Cl).startDate(LocalDateTime.now().plusDays(1))
 				.endDate(LocalDateTime.now().plus(Period.ofDays(2))).build();
-		InterParkData obj3 = InterParkData.builder().name("뽀로로3").address(Address.builder().city("서울").build())
+		InterParkContent obj3 = InterParkContent.builder().name("뽀로로3").address(Address.builder().city("서울").build())
 				.dtype(InterparkType.Pl).startDate(LocalDateTime.now().plusDays(1))
 				.endDate(LocalDateTime.now().minusDays(2)).build();
-		List<InterParkData> testLs = new ArrayList<>();
+		List<InterParkContent> testLs = new ArrayList<>();
 		testLs.add(obj1);
 		testLs.add(obj3);
 		testLs.add(obj2);
@@ -143,16 +143,16 @@ public class TestEventCacheService {
 	@Test
 	public void saveTestWhenKeyExist() {
 		// given
-		InterParkData obj1 = InterParkData.builder().name("뽀로로1").address(Address.builder().city("서울특별시").build())
+		InterParkContent obj1 = InterParkContent.builder().name("뽀로로1").address(Address.builder().city("서울특별시").build())
 				.dtype(InterparkType.Mu).startDate(LocalDateTime.now())
 				.endDate(LocalDateTime.now().plus(Period.ofDays(1))).build();
-		InterParkData obj2 = InterParkData.builder().name("뽀로로2").address(Address.builder().city("서울시").build())
+		InterParkContent obj2 = InterParkContent.builder().name("뽀로로2").address(Address.builder().city("서울시").build())
 				.dtype(InterparkType.Cl).startDate(LocalDateTime.now())
 				.endDate(LocalDateTime.now().plus(Period.ofDays(2))).build();
-		InterParkData obj3 = InterParkData.builder().name("뽀로로3").address(Address.builder().city("서울").build())
+		InterParkContent obj3 = InterParkContent.builder().name("뽀로로3").address(Address.builder().city("서울").build())
 				.dtype(InterparkType.Pl).startDate(LocalDateTime.now()).endDate(LocalDateTime.now().minusDays(2))
 				.build();
-		List<InterParkData> testLs = new ArrayList<>();
+		List<InterParkContent> testLs = new ArrayList<>();
 		testLs.add(obj1);
 		testLs.add(obj3);
 		testLs.add(obj2);
@@ -167,7 +167,7 @@ public class TestEventCacheService {
 		SearchVO search = SearchVO.builder().region(city).kindOf(dtype).startDate(start).endDate(end).build();
 
 		Pageable pageable = PageRequest.of(0, 10);
-		List<InterParkData> res = interparkService.searchAllEvent(search);
+		List<InterParkContent> res = interparkService.searchAllEvent(search);
 		List<EventCacheDto> list = res.stream().map(EventCacheDto::fromEntity).collect(Collectors.toList());
 		listOperation.rightPushAll(search.getKey(), list);
 
@@ -183,16 +183,16 @@ public class TestEventCacheService {
 	@Test
 	public void getTotalTest() {
 		// given
-		InterParkData obj1 = InterParkData.builder().name("뽀로로1").address(Address.builder().city("서울특별시").build())
+		InterParkContent obj1 = InterParkContent.builder().name("뽀로로1").address(Address.builder().city("서울특별시").build())
 				.dtype(InterparkType.Mu).startDate(LocalDateTime.now())
 				.endDate(LocalDateTime.now().plus(Period.ofDays(1))).build();
-		InterParkData obj2 = InterParkData.builder().name("뽀로로2").address(Address.builder().city("서울시").build())
+		InterParkContent obj2 = InterParkContent.builder().name("뽀로로2").address(Address.builder().city("서울시").build())
 				.dtype(InterparkType.Cl).startDate(LocalDateTime.now())
 				.endDate(LocalDateTime.now().plus(Period.ofDays(2))).build();
-		InterParkData obj3 = InterParkData.builder().name("뽀로로3").address(Address.builder().city("서울").build())
+		InterParkContent obj3 = InterParkContent.builder().name("뽀로로3").address(Address.builder().city("서울").build())
 				.dtype(InterparkType.Pl).startDate(LocalDateTime.now()).endDate(LocalDateTime.now().minusDays(2))
 				.build();
-		List<InterParkData> testLs = new ArrayList<>();
+		List<InterParkContent> testLs = new ArrayList<>();
 		testLs.add(obj1);
 		testLs.add(obj3);
 		testLs.add(obj2);
@@ -206,7 +206,7 @@ public class TestEventCacheService {
 
 		SearchVO search = SearchVO.builder().region(city).kindOf(dtype).startDate(start).endDate(end).build();
 
-		List<InterParkData> res = interparkService.searchAllEvent(search);
+		List<InterParkContent> res = interparkService.searchAllEvent(search);
 		List<EventCacheDto> list = res.stream().map(EventCacheDto::fromEntity).collect(Collectors.toList());
 		listOperation.rightPushAll(search.getKey(), list);
 

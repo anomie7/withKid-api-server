@@ -8,17 +8,17 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 
-import com.withkid.api.domain.InterParkData;
+import com.withkid.api.domain.InterParkContent;
 import com.withkid.api.domain.InterparkType;
 
 public interface InterParkRepository
-		extends JpaRepository<InterParkData, Long>, QuerydslPredicateExecutor<InterParkData> {
-	public List<InterParkData> findAllByDtype(InterparkType dtype);
+		extends JpaRepository<InterParkContent, Long>, QuerydslPredicateExecutor<InterParkContent> {
+	public List<InterParkContent> findAllByDtype(InterparkType dtype);
 
-	public List<InterParkData> findByEndDateBefore(LocalDateTime now);
+	public List<InterParkContent> findByEndDateBefore(LocalDateTime now);
 
-	public List<InterParkData> findByEndDateAfter(LocalDateTime now);
+	public List<InterParkContent> findByEndDateAfter(LocalDateTime now);
 
-	@Query("select i.interparkCode from InterParkData i where i.dtype = :dtype")
+	@Query("select i.interparkCode from InterParkContent i where i.dtype = :dtype")
 	public List<String> findInterparkcodeByDtype(@Param("dtype") InterparkType dtype);
 }
