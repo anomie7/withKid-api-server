@@ -12,29 +12,9 @@ buildscript {
 
 plugins {
   	id "io.franzbecker.gradle-lombok" version "1.10"
-    id "com.ewerk.gradle.plugins.querydsl" version "1.0.9"
 }
 
-querydsl {
-    jpa = true
-}
 
-// plugin needed so that the
-project.afterEvaluate {
-    project.tasks.compileQuerydsl.options.compilerArgs = [
-            "-proc:only",
-            "-processor", project.querydsl.processors() +
-                    ',lombok.launch.AnnotationProcessorHider$AnnotationProcessor'
-                    
-    ]
-}
-/*sourceSets {
-	querydsl {
-		java {
-			srcDirs =  ["src/querydsl/java"]
-		}
-	}
-}*/
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
@@ -74,4 +54,30 @@ dependencies {
 	
 	//embedded-redis
     compile group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2'
+}
+
+/**** QueryDSL Class Generate Script ****/
+def queryDslOutput = file("src/main/generated")
+sourceSets {
+	main {
+		java {
+			srcDir queryDslOutput
+		}
+	}
+}
+
+task generateQueryDSL(type: JavaCompile, group: 'build') {
+	source = sourceSets.main.java
+	classpath = configurations.compile
+	destinationDir = queryDslOutput
+	options.compilerArgs = [
+			"-proc:only",
+			/********************* 핵심 포인트! *********************/
+			"-processor", 'com.querydsl.apt.jpa.JPAAnnotationProcessor,lombok.launch.AnnotationProcessorHider$AnnotationProcessor'
+	]
+}
+compileJava.dependsOn(generateQueryDSL)
+
+clean {
+	delete queryDslOutput
 }
