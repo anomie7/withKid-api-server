@@ -1,15 +1,14 @@
 package com.withkid.api.dto;
 
-import java.time.LocalDate;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.withkid.api.domain.InterParkContent;
 import com.withkid.api.domain.InterparkType;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @JsonTypeName("EventDto")
 @Getter
@@ -19,9 +18,9 @@ public class EventDto extends AbstractEventDto {
 	private LocalDate endDate;
 
 	@Builder
-	public EventDto(Long eventId, String name, String location, InterparkType kindOf, String imageFilePath,
+	public EventDto(Long eventId, String interparkCode,String name, String location, InterparkType kindOf, String imageFilePath,
 			List<PriceDto> price, LocalDate startDate, LocalDate endDate) {
-		super(eventId, name, location, kindOf, imageFilePath, price);
+		super(eventId, interparkCode,name, location, kindOf, imageFilePath, price);
 		this.startDate = startDate;
 		this.endDate = endDate;
 	}

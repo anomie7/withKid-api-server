@@ -1,14 +1,13 @@
 package com.withkid.api.dto;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.withkid.api.domain.InterParkContent;
 import com.withkid.api.domain.InterparkType;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 @JsonTypeName("EventCacheDto")
 @Getter 
 @NoArgsConstructor
@@ -17,9 +16,9 @@ public class EventCacheDto extends AbstractEventDto{
 	private String endDate;
 	
 	@Builder
-	public EventCacheDto(Long eventId, String name, String location, InterparkType kindOf, String imageFilePath,
+	public EventCacheDto(Long eventId, String interparkCode,String name, String location, InterparkType kindOf, String imageFilePath,
 			List<PriceDto> price, String startDate, String endDate) {
-		super(eventId, name, location, kindOf, imageFilePath, price);
+		super(eventId, interparkCode, name, location, kindOf, imageFilePath, price);
 		this.startDate = startDate;
 		this.endDate = endDate;
 	}
@@ -27,6 +26,7 @@ public class EventCacheDto extends AbstractEventDto{
 	public static EventCacheDto fromEntity(InterParkContent entity) {
 		EventCacheDto dto = EventCacheDto.builder()
 				.eventId(entity.getId())
+				.interparkCode(entity.getInterparkCode())
 				.name(entity.getName())
 				.location(entity.getLocation())
 				.startDate(entity.getStartDate().toLocalDate().toString())
