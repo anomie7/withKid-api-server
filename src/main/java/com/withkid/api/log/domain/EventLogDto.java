@@ -1,12 +1,8 @@
 package com.withkid.api.log.domain;
 
-import java.io.Serializable;
+import lombok.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import java.io.Serializable;
 
 @Getter @ToString
 @NoArgsConstructor
@@ -14,6 +10,7 @@ import lombok.ToString;
 @Builder
 public class EventLogDto implements Serializable{
 		private Long eventId;
+		private String interparkCode;
 		private String name;
 		private String location;
 		private String startDate;
