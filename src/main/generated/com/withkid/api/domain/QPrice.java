@@ -22,6 +22,10 @@ public class QPrice extends EntityPathBase<Price> {
 
     public static final QPrice price1 = new QPrice("price1");
 
+    public final BooleanPath defaultPrice = createBoolean("defaultPrice");
+
+    public final StringPath extraInfo = createString("extraInfo");
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final QInterParkContent interpark;
@@ -29,6 +33,8 @@ public class QPrice extends EntityPathBase<Price> {
     public final StringPath name = createString("name");
 
     public final NumberPath<Integer> price = createNumber("price", Integer.class);
+
+    public final StringPath ticketInfo = createString("ticketInfo");
 
     public QPrice(String variable) {
         this(Price.class, forVariable(variable), INITS);
