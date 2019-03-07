@@ -1,7 +1,11 @@
 package com.withkid.api.web.controller;
 
-import java.util.List;
-
+import com.withkid.api.dto.EventCacheDto;
+import com.withkid.api.dto.SearchVO;
+import com.withkid.api.service.EventCacheService;
+import com.withkid.api.web.response.EventResponse;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -10,22 +14,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.withkid.api.dto.EventCacheDto;
-import com.withkid.api.dto.SearchVO;
-import com.withkid.api.service.EventCacheService;
-import com.withkid.api.web.response.EventResponse;
-
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import springfox.documentation.annotations.ApiIgnore;
+
+import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
 public class InterparkRestController {
 
-	@Autowired
 	private EventCacheService cacheService;
+
+	@Autowired
+	public InterparkRestController(EventCacheService cacheService) {
+		this.cacheService = cacheService;
+	}
 
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "page", dataType = "integer", paramType = "query", value = "Results page you want to retrieve (0..N)"),
