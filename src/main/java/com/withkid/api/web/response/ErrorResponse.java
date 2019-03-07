@@ -1,4 +1,4 @@
-package com.withkid.api.web.controller;
+package com.withkid.api.web.response;
 
 import org.springframework.http.HttpStatus;
 
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 @Builder
-class ErrorResponse {
+public class ErrorResponse {
 	private String name;
 	private String msg;
 	private HttpStatus status;
