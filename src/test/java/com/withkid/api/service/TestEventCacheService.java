@@ -1,19 +1,12 @@
 package com.withkid.api.service;
 
-import static org.junit.Assert.assertEquals;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Period;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.annotation.Resource;
-
+import com.withkid.api.domain.Address;
+import com.withkid.api.domain.InterParkContent;
+import com.withkid.api.domain.InterparkType;
+import com.withkid.api.dto.EventCacheDto;
+import com.withkid.api.dto.SearchVO;
+import com.withkid.api.exception.EventNotFountException;
+import com.withkid.api.repository.InterParkRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +19,18 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.withkid.api.domain.Address;
-import com.withkid.api.domain.InterParkContent;
-import com.withkid.api.domain.InterparkType;
-import com.withkid.api.dto.EventCacheDto;
-import com.withkid.api.dto.SearchVO;
-import com.withkid.api.exception.EventNotFountException;
-import com.withkid.api.repository.InterParkRepository;
+import javax.annotation.Resource;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("test")
