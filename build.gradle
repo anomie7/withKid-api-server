@@ -21,7 +21,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
 group = 'com.withkid.api'
-version = '0.6.5'
+version = '0.6.6'
 sourceCompatibility = 1.8
 
 repositories {
@@ -34,7 +34,7 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.springframework.boot:spring-boot-starter-mustache')
 	compile('org.springframework.boot:spring-boot-starter-web')
-	runtime('org.springframework.boot:spring-boot-devtools')
+	developmentOnly('org.springframework.boot:spring-boot-devtools')
 	
 	runtimeOnly('com.h2database:h2')
 	compileOnly('org.projectlombok:lombok')
@@ -42,6 +42,10 @@ dependencies {
 	
 	compile('org.hibernate:hibernate-java8')
 	compile('org.mariadb.jdbc:mariadb-java-client')
+
+
+	compile group: 'org.apache.commons', name: 'commons-pool2', version: '2.4.3'
+
 	//swagger
 	compile 'io.springfox:springfox-swagger2:2.6.1'
 	compile 'io.springfox:springfox-swagger-ui:2.6.1'

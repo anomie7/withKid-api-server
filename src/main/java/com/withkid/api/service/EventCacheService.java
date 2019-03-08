@@ -1,30 +1,37 @@
 package com.withkid.api.service;
 
+import com.withkid.api.domain.InterParkContent;
+import com.withkid.api.dto.EventCacheDto;
+import com.withkid.api.dto.SearchVO;
+import com.withkid.api.exception.EventNotFountException;
+import io.lettuce.core.RedisException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.RedisSystemException;
+import org.springframework.data.redis.connection.PoolException;
+import org.springframework.data.redis.core.ListOperations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.annotation.Resource;
-
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.redis.core.ListOperations;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Service;
-
-import com.withkid.api.domain.InterParkContent;
-import com.withkid.api.dto.EventCacheDto;
-import com.withkid.api.dto.SearchVO;
-import com.withkid.api.exception.EventNotFountException;
-
 @Service
 public class EventCacheService {
+
 	@Resource(name = "redisTemplate")
 	private ListOperations<String, EventCacheDto> listOperation;
-	@Resource
 	private RedisTemplate<String, EventCacheDto> redisTemplate;
-	@Resource
 	private InterparkService interparkService;
+
+	@Autowired
+	public EventCacheService(RedisTemplate<String, EventCacheDto> redisTemplate, InterparkService interparkService) {
+		this.redisTemplate = redisTemplate;
+		this.interparkService = interparkService;
+	}
 
 	public List<EventCacheDto> search(SearchVO search, Pageable pageable) {
 		Integer firstIdx = pageable.getPageNumber() * pageable.getPageSize();
@@ -58,7 +65,15 @@ public class EventCacheService {
 	}
 
 	public boolean isExist(String key) {
-		return redisTemplate.hasKey(key);
+		Boolean hasKey = null;
+		try {
+			hasKey = redisTemplate.hasKey(key);
+		} catch (PoolException e) {
+			throw new RedisException("RedisException!");
+		} catch (RedisSystemException e) {
+			throw new RedisException("RedisException!");
+		}
+		return hasKey;
 	}
 
 	public Long getTotal(String key) {
