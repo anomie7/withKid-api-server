@@ -1,18 +1,15 @@
 package com.withkid.api.log.service;
 
-import java.util.Optional;
-import java.util.Set;
-
-import javax.annotation.Resource;
-
+import com.withkid.api.log.domain.EventLogDto;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.data.redis.core.ZSetOperations.TypedTuple;
 import org.springframework.stereotype.Service;
 
-import com.withkid.api.log.domain.EventLogDto;
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
+import javax.annotation.Resource;
+import java.util.Optional;
+import java.util.Set;
 
 
 @Service
@@ -39,7 +36,7 @@ public class EventLogService {
 
 	public String getKey(String accessToken) {
 		Jws<Claims> body = jwtService.thisAccessTokenUsable(accessToken);
-		Integer userId = (Integer) body.getBody().get("id");
+		Integer userId = (Integer) body.getBody().get("user-id");
 		String key = "eventLog::" + userId;
 		return key;
 	}
