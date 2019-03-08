@@ -55,6 +55,9 @@ spring:
   h2:
     console:
       enabled: true
+  devtools:
+    restart:
+      enabled: true
 logging:
   level:
     root: info
