@@ -8,6 +8,7 @@ import com.withkid.api.domain.QInterParkContent;
 import com.withkid.api.dto.SearchVO;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public class InterparkPredicateProvider {
@@ -29,6 +30,14 @@ public class InterparkPredicateProvider {
 
 		build.and(data.deleteflag.eq(DeleteFlag.N));
 
+		return build;
+	}
+
+	public static Predicate getEventPredicate(List<Long> eventids){
+		BooleanBuilder build = new BooleanBuilder();
+		QInterParkContent data = QInterParkContent.interParkContent;
+		build.and(data.deleteflag.eq(DeleteFlag.N));
+		build.and(data.id.in(eventids));
 		return build;
 	}
 }
