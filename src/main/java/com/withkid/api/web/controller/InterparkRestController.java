@@ -2,6 +2,7 @@ package com.withkid.api.web.controller;
 
 import com.withkid.api.domain.InterParkContent;
 import com.withkid.api.dto.EventCacheDto;
+import com.withkid.api.dto.EventDto;
 import com.withkid.api.dto.SearchVO;
 import com.withkid.api.service.EventCacheService;
 import com.withkid.api.service.InterparkService;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -58,5 +60,12 @@ public class InterparkRestController {
 		}
 
 		return ResponseEntity.ok().body(res);
+	}
+
+	@GetMapping("/event/{eventIds}")
+	public ResponseEntity<List<EventDto>> getEventOf(@PathVariable("eventIds") List<Long> eventIds){
+		List<InterParkContent> contents = interparkService.findAllByIds(eventIds);
+		List<EventDto> collect = contents.stream().map(EventDto::fromEntity).collect(Collectors.toList());
+		return ResponseEntity.ok().body(collect);
 	}
 }
