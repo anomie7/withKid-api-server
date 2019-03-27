@@ -1,15 +1,8 @@
 package com.withkid.api.service;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-
-import java.time.LocalDateTime;
-import java.time.Period;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.withkid.api.domain.*;
+import com.withkid.api.dto.SearchVO;
+import com.withkid.api.repository.InterParkRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,12 +15,13 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.withkid.api.domain.Address;
-import com.withkid.api.domain.InterParkContent;
-import com.withkid.api.domain.InterparkType;
-import com.withkid.api.domain.Price;
-import com.withkid.api.dto.SearchVO;
-import com.withkid.api.repository.InterParkRepository;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.util.*;
+
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest()
@@ -69,6 +63,7 @@ public class TestInterparkService {
 
 		InterParkContent obj1 = InterParkContent.builder().name("뽀로로1").address(Address.builder().city("서울특별시").build())
 				.dtype(InterparkType.Mu).startDate(LocalDateTime.now())
+				.deleteflag(DeleteFlag.Y)
 				.endDate(LocalDateTime.now().plus(Period.ofDays(1))).build();
 		InterParkContent obj2 = InterParkContent.builder().name("뽀로로2").address(Address.builder().city("서울시").build())
 				.dtype(InterparkType.Cl).startDate(LocalDateTime.now())
@@ -139,6 +134,13 @@ public class TestInterparkService {
 
 		List<InterParkContent> event = interparkService.searchAllEvent(search);
 		assertEquals(0, event.size());
+	}
+
+	@Test
+	public void testFindByIds(){
+		Long[] ids = {1L, 2L, 3L, 4L};
+		List<InterParkContent> contents = interparkService.findAllByIds(Arrays.asList(ids));
+		assertNotNull(contents);
 	}
 
 }
