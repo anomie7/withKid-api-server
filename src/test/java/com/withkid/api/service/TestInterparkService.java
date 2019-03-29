@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -113,13 +114,14 @@ public class TestInterparkService {
 		InterparkType dtype = null;
 		LocalDateTime start = null;
 		LocalDateTime end = null;
-
 		SearchVO search = SearchVO.builder().region(city).kindOf(dtype).startDate(start).endDate(end)
 				.build();
-		
 		Pageable pageable = PageRequest.of(0, 10);
+
 		Page<InterParkContent> event = interparkService.searchEvent(search, pageable);
-		assertEquals(testLs.size(), event.getNumberOfElements() );
+		List<InterParkContent> collect = testLs.stream().filter(content -> content.getDeleteflag().equals(DeleteFlag.N)).collect(Collectors.toList());
+
+		assertEquals(collect.size(), event.getNumberOfElements() );
 	}
 
 	@Test
